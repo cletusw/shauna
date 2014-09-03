@@ -94,17 +94,6 @@ module.exports = function (grunt) {
           }
         }
       },
-      test: {
-        options: {
-          middleware: function (connect) {
-            return [
-              mountFolder(connect, '.tmp'),
-              mountFolder(connect, 'test'),
-              mountFolder(connect, yeomanConfig.app)
-            ];
-          }
-        }
-      },
       dist: {
         options: {
           middleware: function (connect) {
@@ -132,17 +121,8 @@ module.exports = function (grunt) {
       all: [
         '<%= yeoman.app %>/elements/{,*/}*.js',
         '<%= yeoman.app %>/scripts/{,*/}*.js',
-        '!<%= yeoman.app %>/scripts/vendor/*',
-        'test/spec/{,*/}*.js'
+        '!<%= yeoman.app %>/scripts/vendor/*'
       ]
-    },
-    mocha: {
-      all: {
-        options: {
-          run: true,
-          urls: ['http://localhost:<%= connect.options.port %>/index.html']
-        }
-      }
     },
     useminPrepare: {
       html: '<%= yeoman.app %>/index.html',
@@ -284,12 +264,6 @@ module.exports = function (grunt) {
     ]);
   });
 
-  grunt.registerTask('test', [
-    'clean:server',
-    'connect:test',
-    'mocha'
-  ]);
-
   grunt.registerTask('build', [
     'clean:dist',
     'copy',
@@ -306,7 +280,6 @@ module.exports = function (grunt) {
 
   grunt.registerTask('default', [
     'jshint',
-    // 'test'
     'build'
   ]);
 };
