@@ -1,0 +1,7 @@
+{
+  "generator-polymer": {
+    "includeSass": false,
+    "inlineStyles": false,
+    "inlineScripts": false
+  }
+}
