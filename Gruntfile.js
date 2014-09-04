@@ -25,6 +25,134 @@ module.exports = function (grunt) {
 
   grunt.initConfig({
     yeoman: yeomanConfig,
+    clean: {
+      dist: ['.tmp', '<%= yeoman.dist %>/*'],
+      server: '.tmp'
+    },
+    copy: {
+      tmp: {
+        files: [{
+          expand: true,
+          dot: true,
+          cwd: '<%= yeoman.app %>',
+          dest: '.tmp',
+          src: [
+            'bower_components/**'
+          ]
+        }]
+      },
+      dist: {
+        files: [{
+          expand: true,
+          dot: true,
+          cwd: '<%= yeoman.app %>',
+          dest: '<%= yeoman.dist %>',
+          src: [
+            'elements/**',
+            '!elements/**/*.html',
+            '!elements/**/*.css',
+            '!elements/**/*.js',
+            '!elements/**/*.{png,jpg,jpeg}',
+            'bower_components/platform/platform.js'
+          ]
+        }]
+      }
+    },
+    imagemin: {
+      dist: {
+        files: [{
+          expand: true,
+          cwd: '<%= yeoman.app %>/elements',
+          src: '**/*.{png,jpg,jpeg}',
+          dest: '<%= yeoman.dist %>/elements'
+        }]
+      }
+    },
+    uglify: {
+      dist: {
+        files: [{
+          expand: true,
+          cwd: '<%= yeoman.app %>/elements',
+          src: '**/*.js',
+          dest: '.tmp/elements'
+        }]
+      }
+    },
+    autoprefixer: {
+      options: {
+        browsers: ['last 2 versions']
+      },
+      default: {
+        files: [{
+          expand: true,
+          cwd: '<%= yeoman.app %>',
+          src: ['**/*.css', '!bower_components/**/*.css'],
+          dest: '.tmp'
+        }]
+      }
+    },
+    cssmin: {
+      main: {
+        files: [{
+          expand: true,
+          cwd: '.tmp',
+          src: '*.css',
+          dest: '.tmp'
+        }]
+      },
+      elements: {
+        files: [{
+          expand: true,
+          cwd: '.tmp/elements',
+          src: '**/*.css',
+          dest: '.tmp/elements'
+        }]
+      }
+    },
+    minifyHtml: {
+      options: {
+        quotes: true,
+        empty: true
+      },
+      main: {
+        files: [{
+          expand: true,
+          cwd: '<%= yeoman.app %>',
+          src: '*.html',
+          dest: '.tmp'
+        }]
+      },
+      elements: {
+        files: [{
+          expand: true,
+          cwd: '<%= yeoman.app %>/elements',
+          src: '**/*.html',
+          dest: '.tmp/elements'
+        }]
+      }
+    },
+    inline: {
+      dist: {
+        options: {
+          tag: '.css'
+        },
+        src: ['.tmp/index.html'],
+        dest: ['<%= yeoman.dist %>/']
+      }
+    },
+    vulcanize: {
+      dist: {
+        options: {
+          inline: true,
+          strip: true
+        },
+        files: {
+          '<%= yeoman.dist %>/elements/elements.html': [
+            '.tmp/elements/elements.html'
+          ]
+        }
+      }
+    },
     watch: {
       options: {
         nospawn: true,
@@ -39,8 +167,6 @@ module.exports = function (grunt) {
           '<%= yeoman.app %>/elements/{,*/}*.html',
           '<%= yeoman.app %>/elements/{,*/}*.js',
           '{.tmp,<%= yeoman.app %>}/elements/{,*/}*.css',
-          '{.tmp,<%= yeoman.app %>}/styles/{,*/}*.css',
-          '{.tmp,<%= yeoman.app %>}/scripts/{,*/}*.js',
           '<%= yeoman.app %>/images/{,*/}*.{png,jpg,jpeg,gif,webp}'
         ]
       },
@@ -50,38 +176,16 @@ module.exports = function (grunt) {
       },
       styles: {
         files: [
-          '<%= yeoman.app %>/styles/{,*/}*.css',
           '<%= yeoman.app %>/elements/{,*/}*.css'
         ],
-        tasks: ['copy:styles', 'autoprefixer:server']
-      }
-    },
-    autoprefixer: {
-      options: {
-        browsers: ['last 2 versions']
-      },
-      server: {
-        files: [{
-          expand: true,
-          cwd: '.tmp',
-          src: '**/*.css',
-          dest: '.tmp'
-        }]
-      },
-      dist: {
-        files: [{
-          expand: true,
-          cwd: '<%= yeoman.dist %>',
-          src: ['**/*.css', '!bower_components/**/*.css'],
-          dest: '<%= yeoman.dist %>'
-        }]
+        tasks: ['autoprefixer']
       }
     },
     connect: {
       options: {
         port: 9000,
         // change this to '0.0.0.0' to access the server from outside
-        hostname: 'localhost'
+        hostname: '0.0.0.0'
       },
       livereload: {
         options: {
@@ -109,116 +213,14 @@ module.exports = function (grunt) {
         path: 'http://localhost:<%= connect.options.port %>'
       }
     },
-    clean: {
-      dist: ['.tmp', '<%= yeoman.dist %>/*'],
-      server: '.tmp'
-    },
     jshint: {
       options: {
         jshintrc: '.jshintrc',
         reporter: require('jshint-stylish')
       },
       all: [
-        '<%= yeoman.app %>/elements/{,*/}*.js',
-        '<%= yeoman.app %>/scripts/{,*/}*.js',
-        '!<%= yeoman.app %>/scripts/vendor/*'
+        '<%= yeoman.app %>/elements/{,*/}*.js'
       ]
-    },
-    useminPrepare: {
-      html: '<%= yeoman.app %>/index.html',
-      options: {
-        dest: '<%= yeoman.dist %>'
-      }
-    },
-    usemin: {
-      html: ['<%= yeoman.dist %>/{,*/}*.html'],
-      css: ['<%= yeoman.dist %>/styles/{,*/}*.css'],
-      options: {
-        dirs: ['<%= yeoman.dist %>'],
-        blockReplacements: {
-          vulcanized: function (block) {
-            return '<link rel="import" href="' + block.dest + '">';
-          }
-        }
-      }
-    },
-    vulcanize: {
-      default: {
-        options: {
-          strip: true
-        },
-        files: {
-          '<%= yeoman.dist %>/elements/elements.vulcanized.html': [
-            '<%= yeoman.dist %>/elements/elements.html'
-          ]
-        }
-      }
-    },
-    imagemin: {
-      dist: {
-        files: [{
-          expand: true,
-          cwd: '<%= yeoman.app %>/images',
-          src: '{,*/}*.{png,jpg,jpeg}',
-          dest: '<%= yeoman.dist %>/images'
-        }]
-      }
-    },
-    cssmin: {
-      main: {
-        files: {
-          '<%= yeoman.dist %>/styles/main.css': [
-            '.tmp/concat/styles/{,*/}*.css'
-          ]
-        }
-      },
-      elements: {
-        files: [{
-          expand: true,
-          cwd: '.tmp/elements',
-          src: '{,*/}*.css',
-          dest: '<%= yeoman.dist %>/elements'
-        }]
-      }
-    },
-    minifyHtml: {
-      options: {
-        quotes: true,
-        empty: true
-      },
-      app: {
-        files: [{
-          expand: true,
-          cwd: '<%= yeoman.dist %>',
-          src: '*.html',
-          dest: '<%= yeoman.dist %>'
-        }]
-      }
-    },
-    copy: {
-      dist: {
-        files: [{
-          expand: true,
-          dot: true,
-          cwd: '<%= yeoman.app %>',
-          dest: '<%= yeoman.dist %>',
-          src: [
-            '*.html',
-            'elements/**',
-            '!elements/**/*.css',
-            'images/{,*/}*.{webp,gif}',
-            'bower_components/**'
-          ]
-        }]
-      },
-      styles: {
-        files: [{
-          expand: true,
-          cwd: '<%= yeoman.app %>',
-          dest: '.tmp',
-          src: ['{styles,elements}/{,*/}*.css']
-        }]
-      }
     }
   });
 
@@ -234,8 +236,7 @@ module.exports = function (grunt) {
 
     grunt.task.run([
       'clean:server',
-      'copy:styles',
-      'autoprefixer:server',
+      'autoprefixer',
       'connect:livereload',
       'open',
       'watch'
@@ -245,15 +246,13 @@ module.exports = function (grunt) {
   grunt.registerTask('build', [
     'clean:dist',
     'copy',
-    'useminPrepare',
     'imagemin',
-    'concat',
-    'autoprefixer',
     'uglify',
+    'autoprefixer',
     'cssmin',
-    'vulcanize',
-    'usemin',
-    'minifyHtml'
+    'minifyHtml',
+    'inline',
+    'vulcanize'
   ]);
 
   grunt.registerTask('default', [
