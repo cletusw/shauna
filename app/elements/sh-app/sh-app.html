@@ -1,0 +1,36 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/core-localstorage/core-localstorage.html">
+<link rel="import" href="../../bower_components/core-icon/core-icon.html">
+<link rel="import" href="../../bower_components/core-icons/core-icons.html">
+
+<polymer-element name="sh-app">
+  <template>
+
+    <link rel="stylesheet" href="sh-app.css">
+
+    <core-localstorage id="answersStore" name="shauna-answers" value="{{ answers }}"></core-localstorage>
+    <core-localstorage id="puzzlesStore" name="shauna-puzzles" value="{{ puzzles }}"></core-localstorage>
+
+    <form id="form">
+      <ol>
+        <template repeat="{{ answer, index in answers }}">
+          <li class="puzzle">
+            <input class="reposition" on-change="{{ reposition }}" value="{{ index + 1 }}" tabindex="-1"><span class="answer">{{ answer }}</span>: {{ puzzles[answer][0] }}, {{ puzzles[answer][1] }}, {{ puzzles[answer][2] }}
+            <core-icon icon="close" class="close-icon" on-click="{{ remove }}"></core-icon>
+          </li>
+        </template>
+
+        <span tabindex="-1" id="hidden"></span>
+
+        <li>
+          <input type="text" class="answer" id="answer" value="{{ currentAnswer }}" on-input="{{ validateAnswer }}" required>:
+          <input type="text" value="{{ currentClue1 }}">,
+          <input type="text" value="{{ currentClue2 }}">,
+          <input type="text" value="{{ currentClue3 }}" on-keydown="{{ savePuzzle }}">
+        </li>
+      </ol>
+    </form>
+
+  </template>
+  <script src="sh-app.js"></script>
+</polymer-element>

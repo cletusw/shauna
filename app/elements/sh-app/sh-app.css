@@ -1,0 +1,42 @@
+:host {
+  display: block;
+}
+
+.puzzle {
+  position: relative;
+}
+
+.reposition {
+  position: absolute;
+  left: -30px;
+  width: 20px;
+}
+
+.reposition:not(:focus) {
+  opacity: 0;
+}
+
+.close-icon {
+  height: 16px;
+  margin-left: 12px;
+  opacity: 0.5;
+  width: 16px;
+  vertical-align: bottom;
+}
+
+.close-icon:hover {
+  opacity: 1;
+}
+
+.puzzle:not(:hover) .close-icon {
+  display: none;
+}
+
+.answer {
+  font-weight: bold;
+}
+
+input:invalid:not(:focus) {
+  box-shadow: rgba(238, 0, 0, 0.5) 0px 0px 4px 1px;
+  border-image: radial-gradient(#fff, #e00) 49% repeat;
+}

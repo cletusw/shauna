@@ -2,7 +2,11 @@
   "name": "shauna",
   "version": "0.0.0",
   "dependencies": {
-    "polymer": "Polymer/polymer#^0.4.0"
+    "polymer": "Polymer/polymer#^0.4.0",
+    "paper-input": "Polymer/paper-input#~0.4.0",
+    "core-localstorage": "Polymer/core-localstorage#~0.4.0",
+    "core-icon": "Polymer/core-icon#~0.4.0",
+    "core-icons": "Polymer/core-icons#~0.4.0"
   },
   "devDependencies": {}
 }
