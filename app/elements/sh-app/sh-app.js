@@ -42,12 +42,12 @@
       }
     },
 
-    validateAnswer: function() {
+    validateAnswer: function(event, detail, sender) {
       if (Object.keys(this.puzzles).indexOf(this.currentAnswer) === -1) {
-        this.$.answer.setCustomValidity('');
+        sender.setCustomValidity('');
       }
       else {
-        this.$.answer.setCustomValidity('Duplicate answer');
+        sender.setCustomValidity('Duplicate answer');
       }
     },
 
