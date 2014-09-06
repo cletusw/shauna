@@ -26,7 +26,7 @@
 
     savePuzzle: function(event) {
       // Tab
-      if (event.which === 9) {
+      if (event.which === 9 && !event.shiftKey) {
         if (this.$.form.checkValidity()) {
           this.answers.push(this.currentAnswer);
           this.puzzles[this.currentAnswer] = [
